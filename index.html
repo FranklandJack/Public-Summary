@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>The-HMC-Algorithm</title>
+	<style>
+		h1 {font-family:Arial; 
+		letter-spacing: 1px;  
+		font-style: bold; 
+		color: black;
+		font-size: 40pt;
+		text-align: center;}
+
+		h2 {font-family:Arial; 
+		letter-spacing: 1px;  
+		font-style: bold; 
+		color: black;
+		font-size: 30pt;
+		text-align: center;}
+
+		h3 {font-family:Arial; 
+		letter-spacing: 1px;  
+		font-style: bold; 
+		color: black;
+		font-size: 22pt;
+		text-align: center;}
+
+
+		p {font-family:Arial; 
+		color:grey; 
+		font-size: 18pt;
+		line-height: 26pt;
+		margin: 2cm 4cm 3cm 4cm;
+	}
+
+		p em {background:red; 
+		color:white; 
+		font-style:italic}
+
+		p.blue {font-family:Arial; 
+		color:blue}
+
+		p.red {font-family:Arial; 
+		color:red}
+
+		video {
+		display: block;
+		margin: 0 auto;
+		}
+
+		img {
+			display: block;
+			margin: 0 auto;
+		}
+		 ol
+    {
+       display: inline-block;
+       margin-left: 4cm;
+       margin-right: 4cm;
+    }
+
+		li {
+			font-family:Arial; 
+		color: #606060; 
+		font-size: 18pt;
+		margin:0 auto;
+		}
+	</style>
+	<script src="http://fred-wang.github.io/mathjax.js/mpadded-min.js"></script>
+	<script type="text/javascript"
+  	src="http://www.maths.nottingham.ac.uk/personal/drw/LaTeXMathML.js">
+  	</script>
+  	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</head>
+<body>
+	<h1> The HMC Algorithm </h1>
+
+	<p> 
+		Welcome to my MPhys project public summary. This document is aimed at an audience with an A-level or
+		equivalent knowledge of Maths and Physics.<br/>
+	</p>
+
+	<h2> What is HMC? </h2>
+
+	<p> 
+		<strong>HMC</strong> is an acronym for <strong>Hybrid Monte Carlo</strong>  (or sometimes <strong>Hamiltonian Monte Carlo</strong>). The <strong>Hybrid/Hamiltonian</strong> part is because the algorithm borrows from <strong>Hamiltonian Dynamics</strong> (an alternative but equivalent formulation of Newton's equation) and the <strong>Monte Carlo</strong> part is because, well, it is a <strong>Monte Carlo</strong> method... which leads us to our second question.
+	</p>
+
+	<h2> What is a Monte Carlo Method? </h2>
+	<p> 
+		Monte Carlo methods are a huge family of algorithms with numerous applications across a massive range of subjects. Most numerical calculations are too difficult or impossible to do exactly - this is where Monte Carlo methods methods come in handy. Broadly speaking a Monte Carlo method works as follows: We have a set of possible values, we take a random sample of that set, we make calculations based on our random sample. More concretely what this normally means is; there is a probability distribution that we may or may not know and in order to make numerical calculations based on that probability distribution, we draw random samples according to that distribution and use their values to do the calculations. It is normally a good idea to take lots of samples, otherwise your estimate on the value you are trying to calculate will likely be wrong. <br><br>
+
+		This is all a bit abstract; it is easiest to get your head round Monte Carlo methods by looking at an example, so here is a classic - estimating $\pi$. We start of drawing a circle of area $\pi$ centred in a box of area $4$. All the points within this box form our set of possible values. Then we draw a random sample of points within the box - these are our random samples. Then we take the ratio of the ''points within the circle'' : ''all points''. Intuitively this ratio should be $\frac{\pi}{4}$ since the the points within the circle estimate the area of the circle, whilst points in the square i.e. all sample, estimate the area of the box. This is our calculation based on the random samples. Play the video below to see this Monte Carlo-Method live in action.
+		<video controls="">
+			<source src="Pi.mp4" type="video/mp4">
+				Your browser does not support the video tag.
+		</video> <br>
+
+		We are not taking nearly enough samples here, so the estimate of $\pi$ is only correct in the first significant figure. However, this animation visualises the process nicely. We can see the random points being generated, and after all the points are generated, points in the circle are counted (in green) and then the method described above is used to estimate pi. 
+
+		 The <strong>HMC</strong>  algorithm is an example of a <strong>MCMC</strong> (<strong>Markov Chain Monte Carlo</strong>) algorithm.
+	</p>
+
+	<h2> What is a Markov Chain Monte Carlo Method? (and when will these definitions end?) </h2>
+	<p>
+		Okay, this is the last one I promise. In the normal "plain-old" Monte Carlo we saw above there is a problem. The problem is that it is slow. In the above calculation of $\pi$ we took $200$ random sample and we saw it only got the first figure of $\pi$ right. We could take more samples, however this is slow and computationally expensive, plus there is a better way. Certain samples in our set of random samples will have more of an overall contribution to the values we are trying to calculate than others. What we can choose to do is sample these values more frequently than the others to increase our estimate on the values we are calculating. In practice, the way we implement this is to find a probability distribution that models the system and draw our random samples according to this distribution. To do this we construct a Markov Chain (a chain of random samples where the probability of the next sample taking on a particular value depends only on the value of the previous sample), and insure that in the long time limit of this chain, the samples follow the behaviour ascribed by the probability distribution. We can then make calculations as before using these values, knowing that they give dominant contributions, and so overall we have to take less samples.
+	</p>
+
+	<h2> How does the HMC algorithm work? </h2>
+	<p>
+		In the section above, we explained why we should use importance sampling, and sample according to a probability distribution, but how should we actually do this in practice? The HMC algorithm gives us one possible method. There is a result in statistical physics that tells us that given some energy function <span style="color: black">$E(x)$</span> for the state <span style="color: black">$x$</span> (lets keep things simple here and just take <span style="color: black">$x$</span> to be the position of a single particle of mass $1$) of our system, then the probability of our system being in that state is given by <span style="color: black">$P(x) \propto \exp(-E(x))$</span>. So, if we have an energy function for our system, then we should take our samples as above according to the probability distribution <span style="color: black">$P(x)$</span>. Suppose for example we had a system with an energy given by <span style="color: black">$E(x) = \frac{1}{2}x^{2}$</span> which is just the potential energy of a harmonic oscillator. Then the energy and corresponding probability distribution look like: 
+		<br> <img src="Example-Harmonic-Potential.png"> <br>
+		In order to perform the HMC algorithm we introduce "fictitious-momenta" into the system. This means we introduce a momentum <span style="color: black">$p$</span> to go with our variable which we wish to sample. We then define a "Hamiltonian" function <span style="color: black">$H(x,p) = \frac{p^2}{2} + E(x)$</span>.
+		<br>
+		 We are then ready to run the algorithm:
+	</p>
+		<ol>
+  			<li> Provide an initial state <span style="color: black">$x$</span>. </li>
+  			<li> Draw random momentum <span style="color: black">$p$</span> from a Gaussian distribution. </li>
+  			<li> Calculate the Hamiltonian. </li>
+  			<li> Evolve system using ''Hamilton's equations''</li>
+  			<li> Calculate Hamiltonian </li>
+  			<li> Accept new state with probability given by <span style="color: black">$\min\left[{1,exp{\left\{-H_{new}+H_{old}\right\}}\right]$</span>
+  			<li> Return to step 2.
+		</ol>
+
+	<p>
+
+		If steps above are difficult to understand do not worry; all you need to know to understand this document is that in the HMC algorithm we begin with an initial state/sample, we generate a random momentum to go with it (the Gaussian distribution is a specific random distribution that is very common in physics), we calculate the the Hamiltonian quantity defined above, then evolve the values <span style="color: black">$x$</span> and <span style="color: black">$p$</span> in time using equations that are physically equivalent to the more ubiquitous <span style="color: black">$F = ma$</span>. If the value of the Hamiltonian has decreased after the evolution of the system we accept the new value of <span style="color: black">$x$</span> as a sample and start again, this time using the new <span style="color: black">$x$</span> as our starting state, otherwise we accept the new <span style="color: black">$x$</span> with a probability that is determined by how much the Hamiltonian increased, and for larger increases the probability is smaller. Thinking about the Hamiltonian as the energy function of our joint <span style="color: black">$x, p$</span> system this is fairly intuitive: if the energy decreases in the system - we accept the new state, and if it increases we accept it with a probability that depends on how much it increased by.
+	</p>
+
+	<p>
+		Again, this is all fairly abstract, so lets return to our example system where <span style="color: black">$E(x)=\frac{1}{2}x^2$</span> and see how it works, play the video below to see HMC in action:
+		<video controls="">
+			<source src="HMC-Harmonic.mp4" type="video/mp4">
+				Your browser does not support the video tag.
+		</video> <br>
+		The black dot represents our particle moving between samples. In the left animation we can see how its position and momentum evolve according to Hamiltonian dynamics, whilst on the right we see how the energy of our system changes. Accepted states are recorded in green, rejected ones in red. Notice how when a proposed state is reject the particle jumps back to its previous <span style="color: black">$x$</span> position on the x-axis, where as when a state is accepted it starts where it left off in the <span style="color: black">$x$</span> variable.   
+
+	</p>
+		<h3> A Problem with HMC </h3>
+	<p>
+		Now that we understand how the HMC works, lets have a look at one of its problems. Let us define an energy function <span style="color: black">$E(x) = (x^2-1)^2$</span>, this is an example of an "anharmonic potential". Plotting the energy function and the corresponding probability density function as above we get:
+		<br> <img src="Example-Anharmonic-Potential.png"> <br>
+		So we can see the most likely regions (where the probability has its maxima) for the particle to be in are where the energy is at its lowest (where the energy function has its minima). As before we can run a simulation and animate it to see what happens; this is exactly the same as the case above but for the new energy function:
+		<video controls="">
+			<source src="HMC-Anharmonic.mp4" type="video/mp4">
+				Your browser does not support the video tag.
+		</video> <br>
+		Notice how values of <span style="color: black">$x$</span> which correspond to higher energy are on the whole rejected. However, there is something else. It seems like the particle is stuck in the left well and no samples are drawn from the well on the right. This is bad. If we were to estimate the average value of <span style="color: black">$x$</span> this particular run would give <span style="color: black">$x \approx -0.7$</span> where as since the energy function is symmetric, we know <span style="color: black">$x = 0$</span> is the correct average value. The reason this is happening is that the two wells are separated by a region of low probability/high energy in the middle, so its very unlikely that a particle could move from one well to the other via the Hamiltonian dynamics that evolves <span style="color: black">$x = 0$</span> to proposes updates. So how do we fix this?
+
+
+	</p>
+		<h3> Tempering Dynamics </h3>
+	<p>
+		In order to fix this problem we do something called "tempering". In words, this basically means we boost the momentum of the particle in the first half of its trajectory and reduce it in the second half in the hope that we can get it over the region of low probability and into the other well. The reason this is called tempering is that it corresponds to increasing the "temperature" of the system, although the details of how this works are slightly beyond the scope of this summary, we can see this process in action in the video below:
+		<video controls="">
+			<source src="HMC-Anharmonic-Tempering.mp4" type="video/mp4">
+				Your browser does not support the video tag.
+		</video> <br>
+		Much better. We can see how the particle is now exploring both states; this will give much better estimates on any values calculated. 
+
+	</p>
+		<h2> HMC in Quantum Simulations </h2>
+	<p>
+		In my MPhys project I applied this algorithm to the harmonic and anharmonic quantum oscillators and used it to calculate various expectation values of those systems. Although the implementation details are beyond the scope of this summary, Monte Carlo-Methods are perfect for these calculations since analytically the calculations would require you to perform infinite dimensional integrals. Where as above we had energy functions and probability density functions that depended on a single variable <span style="color: black">$x$</span>, in the quantum Monte Carlo calculations we have similar functions that could depend on hundreds or thousands of variables. However, in the case of the anharmonic quantum oscillator we still have the same problem as above, the system gets stuck in a potential well that is separated from another well by a region of low probability, and I applied the same tempering technique in an attempt to solve this problem. 
+	</p>
+
+</body>
+</html>
