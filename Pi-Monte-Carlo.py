@@ -3,26 +3,10 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 plt.rcParams['animation.ffmpeg_path'] = '/usr/local/bin/ffmpeg'
 
-totalSteps = 200
+# This is the total number of points to generate and plot.
+totalPoints = 200
 
-def data_gen():
-	global totalSteps
-	
-	steps = 0
-	 
-
-	while steps < totalSteps:
-		steps += 1
-		
-		x = np.random.random()* 2 - 1
-		y = np.random.random()* 2 - 1
-		if steps != totalSteps:
-			yield x, y, False
-		else:
-			yield x, y, True
-
-		 
-
+# This is necessary for saving the animation.
 Writer = animation.writers['ffmpeg']
 writer = Writer(fps=5, metadata=dict(artist='Me'), bitrate=1800)
 
@@ -56,43 +40,44 @@ plt.tight_layout()
 
 circleCount = 0
 
-
-
-def init():
-	xpPlot.plot(0, 0, markersize='4', marker='', color='black')
-
 # Function that gets called each time a new frame is needed for the animation.
 def update(frame):
 	global data
 	global circleCount
-	global totalSteps
+	global totalPoints
+
+	if(frame==0):
+		xpPlot.plot(0, 0, markersize='4', marker='', color='black')
+	else:
+		print(frame)
 	
-	x = np.random.random()* 2 - 1
-	y = np.random.random()* 2 - 1
+		x = np.random.random()* 2 - 1
+		y = np.random.random()* 2 - 1
 
-	xpPoint, = xpPlot.plot(x, y, markersize='4', marker='o', color='black')
+		xpPoint, = xpPlot.plot(x, y, markersize='4', marker='o', color='black')
 
-	data.append(xpPoint)
+		data.append(xpPoint)
 
-	if frame==totalSteps:
-		for point in data:
-			if point.get_xdata()*point.get_xdata() + point.get_ydata()*point.get_ydata() <= 1:
-				point.set_color('green')
-				circleCount+=1
+		if frame==totalPoints:
 
-			else:
-				point.set_color('red')
-		# Estimate pi. 
-		piEstimate = 4 * circleCount/len(data)
-		xpPlot.annotate(r'$\pi \approx $' + str(piEstimate), xy=(0.0, 0.0), xycoords="data",
-            va="center", ha="center",
-            bbox=dict(boxstyle="round", fc="w"))
+			for point in data:
+				if point.get_xdata()*point.get_xdata() + point.get_ydata()*point.get_ydata() <= 1:
+					point.set_color('green')
+					circleCount+=1
+
+				else:
+					point.set_color('red')
+			# Estimate pi. 
+			piEstimate = 4 * circleCount/len(data)
+			xpPlot.annotate(r'$\pi \approx $' + str(piEstimate), xy=(0.0, 0.0), xycoords="data",
+            	va="center", ha="center",
+            	bbox=dict(boxstyle="round", fc="w"))
 
 
 # This function call actually animates the graph.
-ani = animation.FuncAnimation(fig, update, np.arange(1,totalSteps+1), init_func=init, repeat=False, interval=100,save_count=totalSteps)
+ani = animation.FuncAnimation(fig, update, totalPoints+1, repeat=False, interval=100)
 
-ani.save('Pi-Motion.mp4', writer=writer)
-# Show the graph to the user.
-#plt.show()
+# Save the plot.
+ani.save('Pi.mp4', writer=writer)
+
 
