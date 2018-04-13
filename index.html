@@ -68,14 +68,14 @@
 
 	<h2> What is a Markov Chain Monte Carlo Method? (and when will these definitions end?) </h2>
 	<p>
-		Okay, this is the last one I promise. In the normal <i>plain-old</i> Monte Carlo we saw above there is a problem. The problem is that it is slow. In the above calculation of <span style="color: black">$\pi$</span> we took <span style="color: black">$200$</span> random samples and we saw it only got the first figure of <span style="color: black">$\pi$</span> correct. We could take more samples, however this is slow and computationally expensive, plus there is a better way. Certain samples in our set of random samples will have more of an overall contribution to the values we are trying to calculate than others. What we can choose to do is sample these values more frequently than the others to increase our estimate on the values we are calculating. In practice, the way we implement this is to find a probability distribution that models the system and draw our random samples according to this distribution. To do this we construct a Markov Chain (a chain of random samples where the probability of the next sample taking on a particular value depends only on the value of the previous sample), and ensure that in the long time limit of this chain, the samples follow the behaviour ascribed by the probability distribution. We can then make calculations as before using these values, knowing that they give dominant contributions, and so overall we have to take fewer samples.
+		Okay, this is the last one I promise. In the normal <i>plain-old</i> Monte Carlo we saw above there is a problem. The problem is that it is slow. In the above calculation of <span style="color: black">$\pi$</span> we took <span style="color: black">$200$</span> random samples and we saw it only got the first figure of <span style="color: black">$\pi$</span> correct. We could take more samples, however this is slow and computationally expensive, plus there is a better way. Certain samples in our set of random samples will have more of an overall contribution to the values we are trying to calculate than others. What we can choose to do is sample these values more frequently than the others to increase our estimate on the values we are calculating. In practice, the way we implement this is to find a probability distribution that models the system and draw our random samples according to this distribution. To do this we construct a Markov chain (a chain of random samples where the probability of the next sample taking on a particular value depends only on the value of the previous sample), and ensure that in the long time limit of this chain, the samples follow the behaviour ascribed by the probability distribution. We can then make calculations as before using these values, knowing that they give dominant contributions, and so overall we have to take fewer samples.
 	</p>
 
 	<h2> How does the HMC algorithm work? </h2>
 	<p>
 		In the section above, we explained why we should use importance sampling, and sample according to a probability distribution, but how should we actually do this in practice? The <strong>HMC</strong> algorithm gives us one possible method. There is a result in statistical physics that tells us that given some energy function <span style="color: black">$E(x)$</span> for the state <span style="color: black">$x$</span> (lets keep things simple here and just take <span style="color: black">$x$</span> to be the position of a single particle of mass $1$) of our system, then the probability of our system being in that state is given by <span style="color: black">$P(x) \propto e^{-E\left(x\right)}$</span>. So, if we have an energy function for our system, then we should take our samples as above according to the probability distribution <span style="color: black">$P(x)$</span>. Suppose for example we had a system with an energy given by <span style="color: black">$E(x) = \frac{1}{2}x^{2}$</span> which is just the potential energy of a harmonic oscillator. Then the energy and corresponding probability distribution look like: 
 		<br> <img src="Example-Harmonic-Potential.png"> <br>
-		In order to perform the <strong>HMC</strong> algorithm we introduce <i>fictitious-momenta</i> into the system. This means we introduce a momentum <span style="color: black">$p$</span> to go with our variable which we wish to sample. We then define a <i>Hamiltonian</i> function <span style="color: black">$H(x,p) = \frac{p^2}{2} + E(x)$</span>.
+		In order to perform the <strong>HMC</strong> algorithm we introduce <i>fictitious-momenta</i> into the system. This means we introduce a momentum <span style="color: black">$p$</span> to go with our position variable <span style="color: black">$x$</span> which we wish to sample. We then define a <i>Hamiltonian</i> function which is given by <span style="color: black">$H(x,p) = \frac{p^2}{2} + E(x)$</span>.
 		<br>
 		 We are then ready to run the algorithm:
 	</p>
@@ -83,9 +83,9 @@
   			<li> Provide an initial state <span style="color: black">$x$</span>. </li>
   			<li> Draw random momentum <span style="color: black">$p$</span> from a Gaussian distribution. </li>
   			<li> Calculate the Hamiltonian <span style="color: black">$H_{old}$</span>. </li>
-  			<li> Evolve system using ''Hamilton's equations''</li>
-  			<li> Calculate Hamiltonian<span style="color: black">$H_{new}$</span>. </li>
-  			<li> Accept new state with probability given by <span style="color: black">$\min\left[1,e^{\left(-H_{new}+H_{old}\right)}\right]$</span>
+  			<li> Evolve system using <i>Hamilton's equations</i></li>
+  			<li> Calculate Hamiltonian again <span style="color: black">$H_{new}$</span>. </li>
+  			<li> Accept new state <span style="color: black">$x$</span> as sample, and make it the current state with probability given by <span style="color: black">$\min\left[1,e^{\left(-H_{new}+H_{old}\right)}\right]$</span>
   			<li> Return to step 2.
 		</ol>
 
