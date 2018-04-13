@@ -56,8 +56,8 @@ plt.ylim(-5.1,5.1)
 plt.xlim(-5.1,5.1)
 
 # Label the axis. 
-plt.xlabel('Position', fontsize=14, color='black')
-plt.ylabel('Momentum', fontsize=14, color='black')
+plt.xlabel(r'$x$', fontsize=14, color='black',rotation=0)
+plt.ylabel(r'$p$', fontsize=14, color='black',rotation=0)
 
 # Create axis to plot position-potential on.
 xVPlot = plt.subplot(122,frameon=True)
@@ -74,8 +74,8 @@ plt.ylim(-0.1,5)
 plt.xlim(-5.1,5.1)
 
 # Label the axis. 
-plt.xlabel('Position', fontsize=14, color='black')
-plt.ylabel('Potential', fontsize=14, color='black')
+plt.xlabel(r'$x$', fontsize=14, color='black',rotation=0)
+plt.ylabel(r'$E(x)$', fontsize=14, color='black',rotation=0)
 
 
 # Initial position.
@@ -212,7 +212,7 @@ ani = animation.FuncAnimation(fig, hmcUpdate,totalSteps+1, repeat=False, interva
 plt.tight_layout()
 
 # Save the animation.
-ani.save('HMC-Harmonic.mp4', writer=writer)
+ani.save('HMC-Harmonic1.mp4', writer=writer)
 
 
 

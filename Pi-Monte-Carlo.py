@@ -32,7 +32,7 @@ plt.xlim(-1.1,1.1)
 
 # Label the axis. 
 plt.xlabel('x', fontsize=14, color='black')
-plt.ylabel('y', fontsize=14, color='black')
+plt.ylabel('y', fontsize=14, color='black',rotation=0)
 
 # Make sure there is no overlap in the plots.
 plt.tight_layout()
@@ -78,6 +78,6 @@ def update(frame):
 ani = animation.FuncAnimation(fig, update, totalPoints+1, repeat=False, interval=100)
 
 # Save the plot.
-ani.save('Pi.mp4', writer=writer)
+ani.save('Pi2.mp4', writer=writer)
 
 

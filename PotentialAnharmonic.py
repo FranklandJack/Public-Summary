@@ -20,8 +20,8 @@ energyPlot = plt.subplot(121,frameon=True)
 
 
 # Label the axis. 
-plt.xlabel(r'$x$', fontsize=14, color='black')
-plt.ylabel(r'$E(x)$', fontsize=14, color='black')
+plt.xlabel(r'$x$', fontsize=14, color='black',rotation=0)
+plt.ylabel(r'$E(x)$', fontsize=14, color='black',rotation=0)
 
 # Remove numbers since pdf will not be normalised.
 energyPlot.set_yticklabels([])
@@ -31,8 +31,8 @@ energyPlot.set_xticklabels([])
 probabilityPlot = plt.subplot(122,frameon=True)
 
 # Label the axis. 
-plt.xlabel(r'$x$', fontsize=14, color='black')
-plt.ylabel(r'$P(x)$', fontsize=14, color='black')
+plt.xlabel(r'$x$', fontsize=14, color='black',rotation=0)
+plt.ylabel(r'$P(x)$', fontsize=14, color='black',rotation=0)
 
 # Remove numbers since pdf will not be normalised.
 probabilityPlot.set_yticklabels([])

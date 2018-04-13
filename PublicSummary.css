@@ -60,5 +60,24 @@ h1 {font-family:Arial;
 		margin:0 auto;
 		}
 
+	a:link {
+    text-decoration: none;
+    color: black
+	}
 
-		/*TEST COMMENT*/
+	a:visited {
+	    text-decoration: none;
+	    color: black;
+	}
+
+	a:hover {
+	    text-decoration: underline;
+	    color: black;
+	}
+
+	a:active {
+	    text-decoration: underline;
+	    color: black;
+	}
+
+

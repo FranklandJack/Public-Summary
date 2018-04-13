@@ -58,8 +58,8 @@ plt.ylim(-2.5,2.5)
 plt.xlim(-2.5,2.5)
 
 # Label the axis. 
-plt.xlabel('Position', fontsize=14, color='black')
-plt.ylabel('Momentum', fontsize=14, color='black')
+plt.xlabel(r'$x$', fontsize=14, color='black',rotation=0)
+plt.ylabel(r'$p$', fontsize=14, color='black',rotation=0)
 
 # Create axis to plot position-potential on.
 xVPlot = plt.subplot(122,frameon=True)
@@ -73,8 +73,8 @@ plt.ylim(-0.1,2.5)
 plt.xlim(-2.1,2.1)
 
 # Label the axis. 
-plt.xlabel('Position', fontsize=14, color='black')
-plt.ylabel('Potential', fontsize=14, color='black')
+plt.xlabel(r'$x$', fontsize=14, color='black',rotation=0)
+plt.ylabel(r'$E(x)$', fontsize=14, color='black',rotation=0)
 
 
 # Initial position.
