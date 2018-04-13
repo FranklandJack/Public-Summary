@@ -1,0 +1,61 @@
+h1 {font-family:Arial; 
+		letter-spacing: 1px;  
+		font-style: bold; 
+		color: black;
+		font-size: 40pt;
+		text-align: center;}
+
+		h2 {font-family:Arial; 
+		letter-spacing: 1px;  
+		font-style: bold; 
+		color: black;
+		font-size: 30pt;
+		text-align: center;}
+
+		h3 {font-family:Arial; 
+		letter-spacing: 1px;  
+		font-style: bold; 
+		color: black;
+		font-size: 22pt;
+		text-align: center;}
+
+
+		p {font-family:Arial; 
+		color:grey; 
+		font-size: 18pt;
+		line-height: 26pt;
+		margin: 2cm 4cm 3cm 4cm;
+	}
+
+		p em {background:red; 
+		color:white; 
+		font-style:italic}
+
+		p.blue {font-family:Arial; 
+		color:blue}
+
+		p.red {font-family:Arial; 
+		color:red}
+
+		video {
+		display: block;
+		margin: 0 auto;
+		}
+
+		img {
+			display: block;
+			margin: 0 auto;
+		}
+		 ol
+    {
+       display: inline-block;
+       margin-left: 4cm;
+       margin-right: 4cm;
+    }
+
+		li {
+			font-family:Arial; 
+		color: #606060; 
+		font-size: 18pt;
+		margin:0 auto;
+		}
