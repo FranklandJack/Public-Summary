@@ -248,10 +248,10 @@ def hmcUpdate(frame):
 
 		# If we are on the final frame print the monte carlo position estimate.
 		# Average over the recorded samples.
-		if frame == totalSteps:
-			X = round(stat.mean(meanPostition),3)
-			xVPlot.annotate(r'$  \bar{x}  \approx  $' + str(X), xy=(0.0, 2.0), xycoords="data", 
-			va="center", ha="center", bbox=dict(boxstyle="round", fc="w"))
+		#if frame == totalSteps:
+		#	X = round(stat.mean(meanPostition),3)
+		#	xVPlot.annotate(r'$  \bar{x}  \approx  $' + str(X), xy=(0.0, 2.0), xycoords="data", 
+		#	va="center", ha="center", bbox=dict(boxstyle="round", fc="w"))
 
 
 		
